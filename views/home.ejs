@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+    <link rel="stylesheet" href="../node_modules/bootswatch/lumen/bootstrap.min.css">
+
+    <style>
+        form{
+            margin-left: 25px;
+            width:40%;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg bg-primary" data-bs-theme="dark">
+        <div class="container-fluid justify-content-center">
+            <span class="navbar-brand"><h1>Song Recommender</h1></span>
+        </div>
+    </nav>
+    <form>
+        <div>
+            <label class="col-form-label mt-4" for="title">Song Title: </label>
+            <input type="text" class="form-control" id="title">
+        </div>
+        <div>
+            <label class="col-form-label mt-4" for="artist">Artist: </label>
+            <input type="text" class="form-control" id="artist">
+        </div>
+        <br>
+        <button type="button" class="btn btn-primary btn-lg">Get my recommendations!</button>
+    </form>
+</body>
+</html>

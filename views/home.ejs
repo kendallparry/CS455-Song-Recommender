@@ -7,10 +7,13 @@
     <link rel="stylesheet" href="../node_modules/bootswatch/lumen/bootstrap.min.css">
 
     <style>
-        form{
+        .col{
             margin-left: 25px;
-            width:40%;
         }
+        .recs{
+            margin-left: 50px;
+        }
+
     </style>
 </head>
 <body>
@@ -19,17 +22,42 @@
             <span class="navbar-brand"><h1>Song Recommender</h1></span>
         </div>
     </nav>
-    <form>
-        <div>
-            <label class="col-form-label mt-4" for="title">Song Title: </label>
-            <input type="text" class="form-control" id="title">
+    <div class="container">
+        <div class="row justify-content-start">
+            <div class="col">
+                <form>
+                    <div>
+                        <label class="col-form-label mt-4" for="title">Song Title: </label>
+                        <input type="text" class="form-control" id="title">
+                    </div>
+                    <div>
+                        <label class="col-form-label mt-4" for="artist">Artist: </label>
+                        <input type="text" class="form-control" id="artist">
+                    </div>
+                    <br><br>
+                    <button type="button" class="btn btn-primary btn-lg">Get my recommendations!</button>
+                </form>
+            </div>
+            <div class="col">
+                <div class="recs">
+                    <br><br>
+                    <h4>Recommendations</h4>
+                    <ol>
+                        <li>Title - Artist</li>
+                        <li>Title - Artist</li>
+                        <li>Title - Artist</li>
+                        <li>Title - Artist</li>
+                        <li>Title - Artist</li>
+                        <li>Title - Artist</li>
+                        <li>Title - Artist</li>
+                        <li>Title - Artist</li>
+                        <li>Title - Artist</li>
+                        <li>Title - Artist</li>
+                    </ol>
+                </div>
+            </div>
         </div>
-        <div>
-            <label class="col-form-label mt-4" for="artist">Artist: </label>
-            <input type="text" class="form-control" id="artist">
-        </div>
-        <br>
-        <button type="button" class="btn btn-primary btn-lg">Get my recommendations!</button>
-    </form>
+    </div>
+    
 </body>
 </html>

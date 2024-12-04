@@ -67,7 +67,7 @@
             if (response.ok) {
             let text = '';
             for (let i = 0; i < 10; i++) {
-                text += '<li>Title - Artist</li>';
+                text += '<li>'+title+' - '+artist+'</li>'; //title and artist here will be substituted with queried data
             }
             document.getElementById('response').innerHTML = text
             } else {

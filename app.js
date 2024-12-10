@@ -98,3 +98,15 @@ async function run(songTitle, songArtist) {
 //run("Blank Space","Taylor Swift");
 const test = await run("Welcome to the Black Parade", "My Chemical Romance");
 console.log(test);
+
+
+app.use('/node_modules', express.static(path.join(__dirname, 'node_modules')));
+app.set('view engine', 'ejs')
+
+app.get('/', (req, res) => {
+  res.render('home');
+});
+
+app.listen(port, () => {
+  console.log(`Server is running on http://localhost:${port}`);
+});

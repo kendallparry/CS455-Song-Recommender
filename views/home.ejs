@@ -60,16 +60,12 @@
             let artistInput = document.getElementById('artist');
             let artist = artistInput.value;
 
-            //send db title and artist
-
             const response = await fetch(`/fetch?title=${encodeURIComponent(title)}&artist=${encodeURIComponent(artist)}`);
 
             if (response.ok) {
             const data = await response.json()
             let text = '';
-            // for (let i = 0; i < 10; i++) {
-            //     text += '<li>'+title+' - '+artist+'</li>'; //title and artist here will be substituted with queried data
-            // }
+            
             data.forEach(song => {
                 text += `<li>${song}</li>`;
             });

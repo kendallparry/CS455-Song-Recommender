@@ -2,11 +2,18 @@ import express from 'express';
 import path from 'path';
 const app = express();              
 const port = 3000;        
-import { MongoClient } from 'mongodb';
+import { MongoClient, ServerApiVersion } from 'mongodb';
+import { fileURLToPath } from 'url';
 const uri = "mongodb+srv://genericUser:5a1Vu2qe3f360L4F@spotifysongreccluster.fexy1.mongodb.net/?retryWrites=true&w=majority&appName=SpotifySongRecCluster";          
 
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
-const client = new MongoClient(uri);
+// const client = new MongoClient(uri);
+const client = new MongoClient(uri, {
+  serverApi: {
+    version: ServerApiVersion.v1,
+    deprecationErrors: true,
+  }
+});
 
 
 app.get('/fetch', async (req, res) => {
@@ -24,6 +31,7 @@ app.get('/fetch', async (req, res) => {
 
 async function run(songTitle, songArtist) {
   try {
+    await client.connect();
     const database = client.db('spotify_songs');
     const tracks = database.collection('track');
     
@@ -99,7 +107,7 @@ async function run(songTitle, songArtist) {
 const test = await run("Welcome to the Black Parade", "My Chemical Romance");
 console.log(test);
 
-
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 app.use('/node_modules', express.static(path.join(__dirname, 'node_modules')));
 app.set('view engine', 'ejs')
 

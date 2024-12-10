@@ -9,7 +9,19 @@ const uri = "mongodb+srv://genericUser:5a1Vu2qe3f360L4F@spotifysongreccluster.fe
 const client = new MongoClient(uri);
 
 
-// Replace the uri string with your connection string.
+app.get('/fetch', async (req, res) => {
+  const { title, artist } = req.query;  // Fetch title and artist from the query params
+  
+  try {
+    const songData = await run(title, artist);  // Call the run function with title and artist
+    res.json(songData);  // Return the song data as JSON
+  } catch (error) {
+    console.error('Error fetching song data:', error);
+    res.status(500).json({ message: 'Error fetching song data.' });
+  }
+});
+
+
 async function run(songTitle, songArtist) {
   try {
     const database = client.db('spotify_songs');

@@ -54,13 +54,11 @@ async function run(songTitle, songArtist) {
     
     const searchVector = searchSong.attributes;
 
-    console.log(searchSong);
-
     // using vectorSearch to find the 10 most similar songs to our given song
-    const songList = attributes.aggregate([
+    const songList = await attributes.aggregate([
       {
           $vectorSearch: {
-              index: 'vectorSearch',  // The name of the vector search index
+              index: 'searchVector',  // The name of the vector search index
               limit : 10,
               numCandidates: 10000,
               path : 'attributes', //CHANGE
@@ -77,7 +75,6 @@ async function run(songTitle, songArtist) {
 
     // getting the songIDs for each of the 10 songs
     const songListArray = await songList.toArray();
-
     const songStringIDs = [];
     
     for (let i = 0; i < songListArray.length; i++){

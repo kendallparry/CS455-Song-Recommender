@@ -2,11 +2,19 @@ import express from 'express';
 import path from 'path';
 const app = express();              
 const port = 3000;        
-import { MongoClient } from 'mongodb';
+import { MongoClient, ServerApiVersion } from 'mongodb';
+import { fileURLToPath } from 'url';
 const uri = "mongodb+srv://genericUser:5a1Vu2qe3f360L4F@spotifysongreccluster.fexy1.mongodb.net/?retryWrites=true&w=majority&appName=SpotifySongRecCluster";          
 
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
-const client = new MongoClient(uri);
+// const client = new MongoClient(uri);
+const client = new MongoClient(uri, {
+  serverApi: {
+    version: ServerApiVersion.v1,
+    deprecationErrors: true,
+  }
+});
+
 
 app.get('/fetch', async (req, res) => {
   const { title, artist } = req.query;  // Fetch title and artist from the query params
@@ -23,6 +31,7 @@ app.get('/fetch', async (req, res) => {
 
 async function run(songTitle, songArtist) {
   try {
+    await client.connect();
     const database = client.db('spotify_songs');
     const tracks = database.collection('track');
     
@@ -30,7 +39,7 @@ async function run(songTitle, songArtist) {
     const attributes = database.collection('attributes');
 
     // finding the correct song given a title and artist
-    const songInfo = tracks.findOne({
+    const songInfo = await tracks.findOne({
       track_name: songTitle,
       track_artist: songArtist,
     });
@@ -39,11 +48,13 @@ async function run(songTitle, songArtist) {
     const songID = songInfo.track_id;
 
     // finding associated vector using songID
-    const searchSong = attributes.findOne({
+    const searchSong = await attributes.findOne({
       track_id: songID
     });
     
     const searchVector = searchSong.attributes;
+
+    console.log(searchSong);
 
     // using vectorSearch to find the 10 most similar songs to our given song
     const songList = attributes.aggregate([
@@ -80,7 +91,7 @@ async function run(songTitle, songArtist) {
       const songStringInfo = await tracks.findOne({
         track_id : songStringIDs[i]
       });
-      const newStr = str.concat(songStringInfo.track_name, ", ", songStringInfo.track_artist);
+      const newStr = str.concat(songStringInfo.track_name, " - ", songStringInfo.track_artist);
       finalSongInfo.push(newStr);
     }
 
@@ -91,6 +102,15 @@ async function run(songTitle, songArtist) {
     await client.close();
   }
 }
-//run("Blank Space","Taylor Swift");
-const test = await run("Welcome to the Black Parade", "My Chemical Romance");
-console.log(test);
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+app.use('/node_modules', express.static(path.join(__dirname, 'node_modules')));
+app.set('view engine', 'ejs')
+
+app.get('/', (req, res) => {
+  res.render('home');
+});
+
+app.listen(port, () => {
+  console.log(`Server is running on http://localhost:${port}`);
+});

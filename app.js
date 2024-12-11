@@ -59,7 +59,7 @@ async function run(songTitle, songArtist) {
       {
           $vectorSearch: {
               index: 'searchVector',  // The name of the vector search index
-              limit : 10,
+              limit : 11,
               numCandidates: 10000,
               path : 'attributes', //CHANGE
               queryVector : searchVector
@@ -77,7 +77,7 @@ async function run(songTitle, songArtist) {
     const songListArray = await songList.toArray();
     const songStringIDs = [];
     
-    for (let i = 0; i < songListArray.length; i++){
+    for (let i = 1; i < songListArray.length; i++){
       songStringIDs.push(songListArray[i].track_id);
     }
 

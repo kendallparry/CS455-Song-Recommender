@@ -31,23 +31,20 @@ async function run(songTitle, songArtist) {
     const attributes = database.collection('attributes');
 
     // finding the correct song given a title and artist
-    const songInfo = tracks.find({
+    const songInfo = tracks.findOne({
       track_name: songTitle,
       track_artist: songArtist,
     });
 
     // pulling out just the track_id from the given song
-    const songArray = await songInfo.toArray();
-    const songID = songArray[1].track_id;
+    const songID = songInfo.track_id;
 
     // finding associated vector using songID
-    const searchSong = attributes.find({
+    const searchSong = attributes.findOne({
       track_id: songID
     });
     
-    const searchArray = await searchSong.toArray();
-
-    const searchVector = searchArray[1].attributes;
+    const searchVector = searchSong.attributes;
 
     // using vectorSearch to find the 10 most similar songs to our given song
     const songList = attributes.aggregate([

@@ -43,7 +43,6 @@ async function run(songTitle, songArtist) {
       track_name: { $regex: songTitle, $options: 'i'},
       track_artist: { $regex: songArtist, $options: 'i'},
     });
-    console.log(songInfo);
 
     // pulling out just the track_id from the given song
     const songID = songInfo.track_id;

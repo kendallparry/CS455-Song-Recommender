@@ -32,17 +32,18 @@ app.get('/fetch', async (req, res) => {
 async function run(songTitle, songArtist) {
   try {
     await client.connect();
+
+    // Creating a name for our attributes collection
     const database = client.db('spotify_songs');
     const tracks = database.collection('track');
-    
-    // Creating a name for our attributes collection
     const attributes = database.collection('attributes');
 
     // finding the correct song given a title and artist
     const songInfo = await tracks.findOne({
-      track_name: songTitle,
-      track_artist: songArtist,
+      track_name: { $regex: songTitle, $options: 'i'},
+      track_artist: { $regex: songArtist, $options: 'i'},
     });
+    console.log(songInfo);
 
     // pulling out just the track_id from the given song
     const songID = songInfo.track_id;
@@ -51,17 +52,16 @@ async function run(songTitle, songArtist) {
     const searchSong = await attributes.findOne({
       track_id: songID
     });
-    
     const searchVector = searchSong.attributes;
 
     // using vectorSearch to find the 10 most similar songs to our given song
     const songList = await attributes.aggregate([
       {
           $vectorSearch: {
-              index: 'searchVector',  // The name of the vector search index
+              index: 'searchVector',
               limit : 11,
               numCandidates: 10000,
-              path : 'attributes', //CHANGE
+              path : 'attributes',
               queryVector : searchVector
           }
       },
@@ -76,13 +76,11 @@ async function run(songTitle, songArtist) {
     // getting the songIDs for each of the 10 songs
     const songListArray = await songList.toArray();
     const songStringIDs = [];
-    
     for (let i = 1; i < songListArray.length; i++){
       songStringIDs.push(songListArray[i].track_id);
     }
 
     const finalSongInfo = [];
-
     for (let i = 0; i < songStringIDs.length; i++) {
       const str = "";
       const songStringInfo = await tracks.findOne({

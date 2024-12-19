@@ -7,7 +7,6 @@ import { fileURLToPath } from 'url';
 const uri = "mongodb+srv://genericUser:5a1Vu2qe3f360L4F@spotifysongreccluster.fexy1.mongodb.net/?retryWrites=true&w=majority&appName=SpotifySongRecCluster";          
 
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
-// const client = new MongoClient(uri);
 const client = new MongoClient(uri, {
   serverApi: {
     version: ServerApiVersion.v1,
@@ -33,7 +32,7 @@ async function run(songTitle, songArtist) {
   try {
     await client.connect();
 
-    // Creating a name for our attributes collection
+    // Creating names for our attributes collections
     const database = client.db('spotify_songs');
     const tracks = database.collection('track');
     const attributes = database.collection('attributes');
@@ -54,10 +53,10 @@ async function run(songTitle, songArtist) {
     const searchVector = searchSong.attributes;
 
     // using vectorSearch to find the 10 most similar songs to our given song
-    const songList = await attributes.aggregate([
+    const songList = attributes.aggregate([
       {
           $vectorSearch: {
-              index: 'searchVector',
+              index: 'vectorSearch',
               limit : 11,
               numCandidates: 10000,
               path : 'attributes',
@@ -79,6 +78,7 @@ async function run(songTitle, songArtist) {
       songStringIDs.push(songListArray[i].track_id);
     }
 
+    // getting the title and artist for each of the 10 songs
     const finalSongInfo = [];
     for (let i = 0; i < songStringIDs.length; i++) {
       const str = "";
@@ -89,7 +89,7 @@ async function run(songTitle, songArtist) {
       finalSongInfo.push(newStr);
     }
 
-    return finalSongInfo
+    return finalSongInfo;
     
   } finally {
     // Ensures that the client will close when you finish/error

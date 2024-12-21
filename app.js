@@ -36,13 +36,13 @@ async function run(songTitle, songArtist) {
     const database = client.db('spotify_songs');
     const tracks = database.collection('track');
     const attributes = database.collection('attributes');
-
+    
     // finding the correct song given a title and artist
     const songInfo = await tracks.findOne({
       track_name: { $regex: songTitle, $options: 'i'},
       track_artist: { $regex: songArtist, $options: 'i'},
     });
-
+  
     // pulling out just the track_id from the given song
     const songID = songInfo.track_id;
 
